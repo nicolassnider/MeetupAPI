@@ -1,0 +1,7 @@
+//	private string _connectionsString = "Server=localhost;Database=MeetupDb;Trusted_Connection=True;User=sa;Password=wasd";
+
+
+PM> Install-Package Microsoft.EntityFrameworkCore.Tools -Version 3.1.1
+PM> add-migration Init
+PM> update-database -v
+PM> update-database -v
