@@ -1,20 +1,20 @@
-﻿using System;
+﻿using MeetupAPI.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MeetupAPI.Entities
+namespace MeetupAPI.Models
 {
-    public class Meetup
+    public class MeetupDetailsDto
     {
-        public int Id { get; set; }
         public string Name { get; set; }
         public string Organizer { get; set; }
         public DateTime Date { get; set; }
         public bool IsPrivate { get; set; }
+        public string City { get; set; }
+        public string Street { get; set; }
+        public string PostCode { get; set; }
 
-        public virtual Location Location { get; set; }
-
-        public virtual List<Lecture> Lectures { get; set; }
     }
 }
