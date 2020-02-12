@@ -26,8 +26,68 @@ namespace MeetupAPI.Controllers
         {
             var meetups = _meetupContext.Meetups.Include(m=>m.Location).ToList();
             var meetupDtos = _mapper.Map<List<MeetupDetailsDto>>(meetups);
-            return Ok(meetupDtos); 
-            return meetups;
+            return Ok(meetupDtos);
         }
+
+        [Route("{name}")]
+        public ActionResult<List<Meetup>> Get(String name)
+        {
+            var meetup= _meetupContext.Meetups
+                .Include(m => m.Location)
+                .FirstOrDefault(m => m.Name.Replace(" ", "-").ToLower().Equals(name.ToLower()));
+
+            if (meetup==null)return NotFound();
+
+            var meetupDto = _mapper.Map<MeetupDetailsDto>(meetup);
+            return Ok(meetupDto);
+        }
+        [HttpPost]
+        public ActionResult Post([FromBody]MeetupDto model)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var meetup = _mapper.Map<Meetup>(model);
+            _meetupContext.Meetups.Add(meetup);
+            _meetupContext.SaveChanges();
+
+            var key = meetup.Name.Replace(" ", "-").ToLower();
+
+            return Created("api/Meetup/" + key, null);
+        }
+        [HttpPut("{name}")]
+        public ActionResult Put(string name, [FromBody]MeetupDto model)
+        {
+            var meetup = _meetupContext.Meetups
+                .Include(m => m.Location)
+                .FirstOrDefault(m => m.Name.Replace(" ", "-").ToLower().Equals(name.ToLower()));
+
+            if (meetup==null) return NotFound();
+
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            meetup.Name = model.Name;
+            meetup.Organizer = model.Organizer;
+            meetup.Date = model.Date;
+            meetup.IsPrivate = model.IsPrivate;
+
+            return NoContent();
+        }
+        [HttpDelete("{name}")]
+        public ActionResult Delete(string name)
+        {
+            var meetup = _meetupContext.Meetups
+                .Include(m=>m.Location)
+                .FirstOrDefault(m => m.Name.Replace(" ", "-").ToLower().Equals(name.ToLower()));
+
+
+            if (meetup== null) return NotFound();
+
+            _meetupContext.Remove(meetup);
+
+            _meetupContext.SaveChanges();
+
+            return NoContent();
+
+        }
+
     }
 }
