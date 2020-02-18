@@ -22,6 +22,8 @@ namespace MeetupAPI
                 .ForMember(m => m.PostCode, map => map.MapFrom(meetup => meetup.Location.PostCode));
 
             CreateMap<MeetupDto, Meetup>();
+
+            CreateMap<LectureDto, Lecture>();
         }
     }
 }

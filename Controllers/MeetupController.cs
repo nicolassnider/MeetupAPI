@@ -22,6 +22,7 @@ namespace MeetupAPI.Controllers
             _mapper = mapper;
         }
         // GET: Meetup
+        []
         public ActionResult<List<Meetup>> Get()
         {
             var meetups = _meetupContext.Meetups.Include(m=>m.Location).ToList();
