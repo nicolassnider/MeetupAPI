@@ -22,16 +22,30 @@ namespace MeetupAPI.Controllers
             _mapper = mapper;
         }
         // GET: Meetup
-        []
+        
         public ActionResult<List<Meetup>> Get()
         {
             var meetups = _meetupContext.Meetups.Include(m=>m.Location).ToList();
             var meetupDtos = _mapper.Map<List<MeetupDetailsDto>>(meetups);
             return Ok(meetupDtos);
         }
+        [HttpGet("{name}")]
+        public ActionResult<MeetupDetailsDto> Get(string name)
+        {
+            var meetup = _meetupContext.Meetups
+                .Include(m => m.Location)
+                .Include(m => m.Lectures)
+                .FirstOrDefault(m => m.Name.Replace(" ", "-").ToLower().Equals(name.ToLower()));
+
+            if (meetup == null) return NotFound();
+
+            var meetupDto = _mapper.Map<MeetupDetailsDto>(meetup);
+            return Ok(meetupDto);
+        }
+
 
         [Route("{name}")]
-        public ActionResult<List<Meetup>> Get(String name)
+        public ActionResult<List<Meetup>> GetU(String name)
         {
             var meetup= _meetupContext.Meetups
                 .Include(m => m.Location)
